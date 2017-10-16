@@ -1,0 +1,5 @@
+#Don't allow user to accidentally commit their trade ledger
+#as that is potentially highly sensitive information
+
+*.csv
+*.xls
