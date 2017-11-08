@@ -1,0 +1,20 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.expand_path('../../lib', __FILE__)
+require 'bfx'
+
+# Initialize the BFX client
+client = Bitfinex::Client.new
+
+# Make sure a valid ticket symbol arg was passed
+ticker = ARGV[0].downcase
+raise "Unsupported BFX ticker symbol." unless client.symbols.include?(ticker)
+
+# Fetch historical order data for that ticker
+raw_order_data = client.mytrades(ticker, limit_trades: 1_000)
+raise "Increase 'limit_trades' param from 1_000" if raw_order_data.count == 1_000
+
+parsed_order_data = BFX::OrderHistory.new(raw_order_data)
+
+# Print the analysis of the trade history
+ap parsed_order_data.analysis
