@@ -6,9 +6,10 @@ module BFX
 
     def analysis
       {
+        order_count: orders.count,
         total_volume: total_volume,
-        total_buys: buys.map(&:amount).sum,
-        total_sells: sells.map(&:amount).sum,
+        total_buy_volume: buys.map(&:amount).sum,
+        total_sell_volume: sells.map(&:amount).sum,
         weighted_average_buy_price: weighted_average_price(buys),
         weighted_average_sell_price: weighted_average_price(sells),
         total_profit: total_profit
@@ -20,11 +21,11 @@ module BFX
     attr_reader :orders
 
     def buys
-      orders.select { |o| o.type == 'Buy' }
+      @buys ||= orders.select { |o| o.type == 'Buy' }
     end
 
     def sells
-      orders.select { |o| o.type == 'Sell' }
+      @sells ||= orders.select { |o| o.type == 'Sell' }
     end
 
     def weighted_average_price(orders)
